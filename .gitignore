@@ -1,0 +1,21 @@
+# Standard ignores
+*.pyc
+*.pyo
+*.DS_Store
+*.swp
+*.idea
+*.project
+*.pydevproject
+*.kpf
+.deps
+
+
+main/index.yaml
+main/lib.zip
+main/node_modules
+main/static/dst
+main/static/min
+temp/
+
+# These are too big to push; we should just make the script auto-download them if needed
+scripts/names

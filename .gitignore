@@ -7,14 +7,12 @@
 *.project
 *.pydevproject
 *.kpf
+venv
 .deps
 
+# Don't store secret keys in version control
+secret_keys.py
 
-main/index.yaml
-main/lib.zip
-main/node_modules
-main/static/dst
-main/static/min
 temp/
 
 # These are too big to push; we should just make the script auto-download them if needed

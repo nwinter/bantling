@@ -21,6 +21,7 @@ class Name:
         self.name = name
         self.years = years
         self.score = 0  # until scored
+        self.scores = {}
         self.yearly_popularity = {"M": [0] * len(self.years),
                                   "F": [0] * len(self.years)}
         self.normed_popularity = {"M": [0] * len(self.years),
@@ -63,3 +64,6 @@ class Name:
             self.name, self.get_popularity('F'), self.get_popularity('M'),
             ', '.join(self.metaphones))
 
+    def to_dict(self):
+        o = {"name": self.name, "scores": self.scores}
+        return o

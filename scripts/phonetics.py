@@ -14,27 +14,40 @@ import subprocess
 import collections
 from levenshtein import levenshtein
 import math
+import os
+import cPickle as pickle
 
-def phoneticize(names, method='java', test=False):
+_all_names_metaphones = {}
+_all_names_metaphones_cache_filename = 'names/cached_metaphones.pkl'
+def phoneticize(names, method='java', use_cache=True, test=False):
     if method == 'python':
         for name in names:
             primary, secondary = metaphone2.dm(name.name)
             name.add_metaphones(primary, secondary)
     else:
-        N = 20000  # can't pass a string with 30K+ names in it, too long
-        names_to_process = names[:]
-        while names_to_process:
-            names_batch = names_to_process[:N]
-            names_to_process = names_to_process[N:]
-            args = ['java', 'Metaphone3', "_".join(
-                [name.name for name in names_batch])]
-            metaphones = subprocess.check_output(args).strip().split("\n")
-            for i, (name, line) in enumerate(zip(names_batch, metaphones)):
-                try:
-                    primary, secondary = line.split('_')
-                except ValueError, e:
-                    print "Hmm; no luck on", i, name, line, e
-                name.add_metaphones(primary, secondary)
+        if use_cache and os.path.exists(_all_names_metaphones_cache_filename):
+            with open(_all_names_metaphones_cache_filename, 'rb') as f:
+                _all_names_metaphones = pickle.load(f)
+        else:
+            N = 20000  # can't pass a string with 30K+ names in it, too long
+            names_to_process = names[:]
+            while names_to_process:
+                names_batch = names_to_process[:N]
+                names_to_process = names_to_process[N:]
+                args = ['java', '-classpath', 'scripts', 'Metaphone3', "_".join(
+                    [name.name for name in names_batch])]
+                metaphones = subprocess.check_output(args).strip().split("\n")
+                for i, (name, line) in enumerate(zip(names_batch, metaphones)):
+                    try:
+                        primary, secondary = line.split('_')
+                    except ValueError, e:
+                        print "Hmm; no luck on", i, name, line, e
+                    _all_names_metaphones[name.name] = [primary, secondary]
+            with open(_all_names_metaphones_cache_filename, 'wb') as f:
+                pickle.dump(_all_names_metaphones, f, pickle.HIGHEST_PROTOCOL)
+        for name in names:
+            [primary, secondary] = _all_names_metaphones[name.name]
+            name.add_metaphones(primary, secondary)
             
 _metaphone_index = collections.defaultdict(list)
 def build_metaphone_index(all_names):
@@ -62,6 +75,7 @@ def spellability(name, test=False):
             if other is name: continue
             pop_ratio = (other.get_popularity(emphasize_recent=True) /
                          name.get_popularity(emphasize_recent=True))
+            if pop_ratio < 0.01: continue  # levenshtein is expensive
             distance = levenshtein(other.name, name.name)
             penalty = math.log(1 + pop_ratio) / (distance ** 2)
             if test and name.name == "Eliza" and penalty > 0.1:

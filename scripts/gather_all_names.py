@@ -43,7 +43,7 @@ def gather(yob_years, use_cache=True, test=False):
             yearly_totals.append(total_popularity)
         for name in _all_names.values():
             name.normalize_popularities(yearly_totals)
-        phonetics.phoneticize(_all_names.values(), 'java', test)
+        phonetics.phoneticize(_all_names.values(), 'java', use_cache, test)
         with open(_all_names_cache_filename, 'wb') as f:
             pickle.dump(_all_names, f, pickle.HIGHEST_PROTOCOL)
     t1 = time.time()

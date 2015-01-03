@@ -12,10 +12,11 @@ import random
 import gather_all_names
 import phonetics
 import judge
+import export_names
 
-yob_years = range(1880, 2013)
+yob_years = range(1880, 2014)
 
-def main(yob_years, use_cache=True, test=False, test_name=None):
+def main(use_cache=True, test=False, test_name=None, exhaustive=False):
     print "Let's label this bantling!"
     all_names = gather_all_names.gather(yob_years, use_cache, test)
     print "Some example names:\n", '\n'.join(
@@ -31,6 +32,12 @@ def main(yob_years, use_cache=True, test=False, test_name=None):
         print '\n'.join(
             ["%.6f\t%s"%(phonetics.spellability(name), name)
              for name in phonetics.similar_names(test_name, all_names, 10)])
+
+    if not exhaustive:
+        all_names = [name for name in all_names
+                     if name.get_popularity(normalized=True) > 0.01]
+	# Later we can lower the threshold or run the exhaustive version.
+        print "Scoring only most popular %d names." % len(all_names)
 
     # Rank all the names!
     for i, name in enumerate(all_names):
@@ -49,6 +56,7 @@ def main(yob_years, use_cache=True, test=False, test_name=None):
         ["%s\t%.3f"%(name, name.score) for name in scored[:10]])
     print "Worst names:\n", '\n'.join(
         ["%s\t%.3f"%(name, name.score) for name in scored[-10:]])
+    export_names.export_json(all_names)
 
 
 if __name__ == "__main__":
@@ -58,8 +66,11 @@ if __name__ == "__main__":
     test = False
     if len(sys.argv) >= 3 and sys.argv[2] == 'true':
         test = True
-        yob_years = range(2010, 2013)
+        yob_years = range(2011, 2014)
     test_name = None
     if len(sys.argv) >= 4:
         test_name = sys.argv[3]
-    main(yob_years, use_cache, test, test_name)
+    exhaustive = False
+    if len(sys.argv) >= 5:
+        exhaustive = sys.argv[4]
+    main(use_cache, test, test_name, exhaustive)

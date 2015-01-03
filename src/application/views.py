@@ -26,7 +26,7 @@ cache = Cache(app)
 
 
 def home():
-    return redirect(url_for('list_examples'))
+    return render_template('home.html')
 
 
 def say_hello(username):

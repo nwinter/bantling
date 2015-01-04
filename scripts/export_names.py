@@ -11,7 +11,9 @@ from name import Name
 def export_json(names):
     export_filename = 'src/application/static/js/names.json'
     with open(export_filename, 'wb') as f:
-        f.write("[\n")
+        f.write("[\n  ")
+        lines = []
         for name in names:
-           f.write("  " + json.dumps(name.to_dict()) + "\n")
-        f.write("]")
+            lines.append("  " + json.dumps(name.to_dict()))
+        f.write(",\n  ".join(lines))
+        f.write("\n]")

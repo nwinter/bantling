@@ -8,56 +8,41 @@
 
 {% block content %}
 
-    <h1 id="">All Examples</h1>
+    <h1 id="">Name Your Bantling</h1>
     <div>&nbsp;</div>
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Name</th>
-                <th>Description</th>
-                <th>Added by</th>
-                <th>Added on</th>
-                <th>&nbsp;</th>
-                <th>&nbsp;</th>
+                <th>Score</th>
+                <th>Top Gender</th>
+                <th>Like</th>
+                <th>Hate</th>
             </tr>
         </thead>
         <tbody>
-            {% for example in examples %}
-            {% set example_id = example.key.id() %}
+            {% for example in examples or [] %}
             <tr>
-                <td>{{ example_id }}</td>
-                <td>{{ example.example_name }}</td>
-                <td>{{ example.example_description }}</td>
-                <td>{{ example.added_by }}</td>
-                <td class="nowrap">{{ example.timestamp.strftime('%b %d, %Y %I:%M %p') }}</td>
+                <td>{{ example.name }}</td>
+                <td>{{ example.score }}</td>
+                <td>{{ example.top_gender }}</td>
                 <td>
-                    <a href="{{ url_for('edit_example', example_id=example_id) }}" class="btn">Edit</a>
+                    <a href="" class="btn">Like</a>
                 </td>
                 <td>
-                    <form method="post" action="{{ url_for('delete_example', example_id=example_id) }}">
-                        <button class="btn">Delete</button>
-                    </form>
+                    <a href="" class="btn">Hate</a>
                 </td>
             </tr>
             {% else %}
-            <tr><td colspan="7">No examples yet</td></tr>
+            <tr><td colspan="5">No names yet</td></tr>
             {% endfor %}
         </tbody>
     </table>
-    <p>
-        <a class="btn btn-primary" data-toggle="modal" data-target="#new-example-modal">
-            <i class="icon-plus-sign icon-white"></i>
-            New example
-        </a>
-    </p>
-
-
 
 {% endblock content %}
 
 {% block footer %}
-    {% include 'new_example.html' %} {# pull in new_example form (modal dialog) #}
+    
 {% endblock footer %}
 
 {% block tail_script %}

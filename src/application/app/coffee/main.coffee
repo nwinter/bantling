@@ -14,14 +14,15 @@ Utils =
       elem.tooltip "hide"
       return
 
+allNames = []
 module.exports.loadNames = loadNames = ->
   onSuccess = (names, textStatus, jqXHR) ->
     console.log "Loaded", names.length, "names."
-    return
+    allNames = names
+    renderNames()
 
   onError = (jqXHR, textStatus, errorThrown) ->
     console.log "Couldn't load names; have you generated them with the script? python scripts/bantling.py\n", jqXHR, textStatus, errorThrown
-    return
 
   console.log "Loading names..."
   $.ajax
@@ -30,6 +31,28 @@ module.exports.loadNames = loadNames = ->
     success: onSuccess
     error: onError
   return
+
+module.exports.listenToSliders = listenToSliders = ->
+  $('.slider-control').on 'change', ->
+    scoreID = $(@).attr('id')
+    _.find(defaultScorers, scoreID: scoreID).weight = parseInt $(@).val(), 10
+    renderNames()
+
+renderNames = ->
+  table = $('#name-list-table')
+  tbody = table.find('tbody').empty()
+  for name in allNames
+    name.score = judge defaultScorers, name
+  allNames = _.sortBy(allNames, 'score').reverse()
+  for name, rank in allNames
+    break if rank > 100
+    row = $("<tr></tr>")
+    row.append $("<td>#{name.name}</td>")
+    row.append $("<td>#{Math.round(name.score)}</td>")
+    row.append $("<td></td>")
+    row.append $("<td><a href='' class='btn'>Like</a></td>")
+    row.append $("<td><a href='' class='btn'>Hate</a></td>")
+    tbody.append(row)
 
 module.exports.judge = judge = (scorers, name) ->
   scorers ?= defaultScorers
@@ -57,5 +80,4 @@ defaultScorers = [
   {scoreID: "speed.nicklessness", weight: 15}
   {scoreID: "culture.chineseness", weight: 4}
   {scoreID: "culture.genderedness", weight: 20}
-  {scoreID: "speed.nicklessness", weight: 15}
 ]

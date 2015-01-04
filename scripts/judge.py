@@ -27,7 +27,6 @@ weights = (
     ("speed.nicklessness", speed.nicklessness, 15),
     ("culture.chineseness", culture.chineseness, 4),
     ("culture.genderedness", culture.genderedness, 20),
-    ("speed.nicklessness", speed.nicklessness, 15),
 )
 
 total_weight = sum([w for (id, s, w) in weights])

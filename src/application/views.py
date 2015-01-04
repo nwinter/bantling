@@ -26,7 +26,25 @@ cache = Cache(app)
 
 
 def home():
-    return render_template('home.html')
+    controls = [
+        {"id": "phonetics.spellability", "name": "Spellability", "weight": 40},
+        {"id": "phonetics.pronounceability", "name": "Pronounceability", "weight": 10},
+        {"id": "history.timelessness", "name": "Timelessness", "weight": 20},
+        {"id": "history.relevancy", "name": "Relevancy", "weight": 30},
+        {"id": "history.rarity", "name": "Rarity", "weight": 30},
+        {"id": "internet.googlability", "name": "Googlability", "weight": 8},
+        {"id": "internet.availability", "name": "Availability", "weight": 4},
+        {"id": "meaning.secularity", "name": "Secularity", "weight": 30},
+        {"id": "meaning.seriousness", "name": "Seriousness", "weight": 3},
+        {"id": "beauty.palindromicity", "name": "Palindromicity", "weight": 5},
+        {"id": "beauty.initialization", "name": "Initialization", "weight": 10},
+        {"id": "speed.shortness", "name": "Shortness", "weight": 20},
+        {"id": "speed.recitability", "name": "Recitability", "weight": 4},
+        {"id": "speed.nicklessness", "name": "Nicklessness", "weight": 15},
+        {"id": "culture.chineseness", "name": "Chineseness", "weight": 4},
+        {"id": "culture.genderedness", "name": "Genderedness", "weight": 20},
+    ]
+    return render_template('home.html', **locals())
 
 
 def say_hello(username):

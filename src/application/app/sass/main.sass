@@ -7,7 +7,73 @@
 .nowrap
   white-space: nowrap
 
-// Your customizations here
+// colors
+$brown: #5A4338
+$yellow: #FFEB8C
+$bg-yellow: lighten($yellow, 20%)
+$pink: #F79D96
+$blue: #88C8EF
+$green: #E5F7B7
+$purple: #857498
 
-body .navbar
-  background-color: white
+// bootstrap overrides
+
+.navbar-default
+  background-color: $brown
+  border-radius: 0
+  border: 0
+
+.navbar
+  border: 0
+
+.navbar-default .navbar-nav>.active>a, 
+.navbar-default .navbar-nav>.active>a:hover, 
+.navbar-default .navbar-nav>.active>a:focus
+  color: $yellow
+
+.navbar-default .navbar-nav>li>a:hover, 
+.navbar-default .navbar-nav>li>a:focus
+  color: $yellow
+
+.navbar-default .navbar-nav>li>a
+  color: lighten($yellow, 15%)
+
+.table-striped>tbody>tr:nth-child(odd)>td, 
+.table-striped>tbody>tr:nth-child(odd)>th
+  background-color: lighten($yellow, 15%)
+
+.table-bordered>thead>tr>th,
+.table-bordered>tbody>tr>th, 
+.table-bordered>tfoot>tr>th, 
+.table-bordered>thead>tr>td, 
+.table-bordered>tbody>tr>td, 
+.table-bordered>tfoot>tr>td
+  border-color: lighten($brown, 30%)
+  
+
+.table thead>tr>th
+  border-bottom: 1px solid
+
+// base styles
+
+body
+  background-color: $bg-yellow
+
+table, th, td
+  background-color: transparent
+
+h1, h2, h3, h4, h5, h6, .navbar-brand
+  font-family: "Arial Rounded MT Bold", "Quicksand", "Helvetica Rounded"
+  // color: $brown
+
+h1
+  font-size: 4em
+
+#home-h1
+  color: $yellow
+
+p, td, div
+  font-family: "Quicksand", "Century Gothic"
+
+th
+  color: $brown

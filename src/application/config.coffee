@@ -13,6 +13,7 @@ exports.config =
 
   files:
     javascripts:
+      defaultExtension: 'coffee'
       joinTo:
         'js/app.js': /^app/
         'js/vendor.js': /^(vendor|bower_components)/

@@ -48,7 +48,8 @@
 {% block tail_script %}
 <script>
     $(document).ready(function() {
-        loadNames();
+        var main = require('coffee/main');
+        main.loadNames();
     });
 </script>
 {% endblock tail_script %}

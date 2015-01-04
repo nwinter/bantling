@@ -14,7 +14,7 @@ Utils =
       elem.tooltip "hide"
       return
 
-loadNames = ->
+module.exports.loadNames = loadNames = ->
   onSuccess = (names, textStatus, jqXHR) ->
     console.log "Loaded", names.length, "names."
     return
@@ -31,7 +31,7 @@ loadNames = ->
     error: onError
   return
 
-judge = (scorers, name) ->
+module.exports.judge = judge = (scorers, name) ->
   scorers ?= defaultScorers
   totalWeight = 0
   score = 0

@@ -20,6 +20,7 @@ import cPickle as pickle
 _all_names_metaphones = {}
 _all_names_metaphones_cache_filename = 'names/cached_metaphones.pkl'
 def phoneticize(names, method='java', use_cache=True, test=False):
+    global _all_names_metaphones
     if method == 'python':
         for name in names:
             primary, secondary = metaphone2.dm(name.name)

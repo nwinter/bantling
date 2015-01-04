@@ -20,3 +20,10 @@ scripts/names
 
 /names/
 names.json
+
+# Now these are compiled brunch output
+/src/application/static
+
+# Don't store these modules
+/src/application/bower_components
+/src/application/node_modules

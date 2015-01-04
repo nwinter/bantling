@@ -9,7 +9,7 @@ import json
 from name import Name
 
 def export_json(names):
-    export_filename = 'src/application/static/js/names.json'
+    export_filename = 'src/application/app/assets/js/names.json'
     with open(export_filename, 'wb') as f:
         f.write("[\n  ")
         lines = []

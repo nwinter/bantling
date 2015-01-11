@@ -65,5 +65,17 @@ class Name:
             ', '.join(self.metaphones))
 
     def to_dict(self):
-        o = {"name": self.name, "scores": self.scores}
+        o = {"name": self.name, "scores": self.scores, "genders": self.get_genders()}
         return o
+
+    def get_genders(self):
+        male_pop = self.get_popularity("M", normalized=True, emphasize_recent=True)
+        female_pop = self.get_popularity("F", normalized=True, emphasize_recent=True)
+        genders = []
+        if male_pop > 10 * female_pop:
+            genders = ["M"]
+        elif female_pop > 10 * male_pop:
+            genders = ["F"]
+        else:
+            genders = ["F", "M"]
+        return genders

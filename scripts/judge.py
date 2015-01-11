@@ -11,22 +11,22 @@ import internet
 import meaning
 
 weights = (
-    ("phonetics.spellability", phonetics.spellability, 40),
-    ("phonetics.pronounceability", phonetics.pronounceability, 10),
-    ("history.timelessness", history.timelessness, 20),
-    ("history.relevancy", history.relevancy, 30),
-    ("history.rarity", history.rarity, 30),
-    ("internet.googlability", internet.googlability, 8),
-    ("internet.availability", internet.availability, 4),
-    ("meaning.secularity", meaning.secularity, 30),
-    ("meaning.seriousness", meaning.seriousness, 3),
-    ("beauty.palindromicity", beauty.palindromicity, 5),
-    ("beauty.initialization", beauty.initialization, 10),
-    ("speed.shortness", speed.shortness, 20),
-    ("speed.recitability", speed.recitability, 4),
-    ("speed.nicklessness", speed.nicklessness, 15),
-    ("culture.chineseness", culture.chineseness, 4),
-    ("culture.genderedness", culture.genderedness, 20),
+    ("phonetics-spellability", phonetics.spellability, 40),
+    ("phonetics-pronounceability", phonetics.pronounceability, 10),
+    ("history-timelessness", history.timelessness, 20),
+    ("history-relevancy", history.relevancy, 30),
+    ("history-rarity", history.rarity, 30),
+    ("internet-googlability", internet.googlability, 8),
+    ("internet-availability", internet.availability, 4),
+    ("meaning-secularity", meaning.secularity, 30),
+    ("meaning-seriousness", meaning.seriousness, 3),
+    ("beauty-palindromicity", beauty.palindromicity, 5),
+    ("beauty-initialization", beauty.initialization, 10),
+    ("speed-shortness", speed.shortness, 20),
+    ("speed-recitability", speed.recitability, 4),
+    ("speed-nicklessness", speed.nicklessness, 15),
+    ("culture-chineseness", culture.chineseness, 4),
+    ("culture-genderedness", culture.genderedness, 20),
 )
 
 total_weight = sum([w for (id, s, w) in weights])

@@ -24,6 +24,9 @@ def genderedness(name):
     can come up with some other appellation for use then. It's just
     inconvenient later to have a gender-ambiguous name.
     """
-    score = 1
-
+    male_pop = name.get_popularity("M", normalized=True, emphasize_recent=True)
+    female_pop = name.get_popularity("F", normalized=True, emphasize_recent=True)
+    pop_ratio = male_pop / (male_pop + female_pop)
+    pop_ratio = max(pop_ratio, 1 - pop_ratio)
+    score = 2 * (pop_ratio - 0.5)
     return score

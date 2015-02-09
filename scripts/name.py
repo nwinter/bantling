@@ -26,6 +26,8 @@ class Name:
                                   "F": [0] * len(self.years)}
         self.normed_popularity = {"M": [0] * len(self.years),
                                   "F": [0] * len(self.years)}
+        self.nicknames = {}
+        self.full_names = {}
 
     def add_popularity(self, year, gender, count):
         self.yearly_popularity[gender][year - self.years[0]] = count
@@ -66,6 +68,8 @@ class Name:
 
     def to_dict(self):
         o = {"name": self.name, "scores": self.scores, "genders": self.get_genders()}
+        if hasattr(self, "meaning"):
+            o['meaning'] = self.meaning
         return o
 
     def get_genders(self):
@@ -79,3 +83,16 @@ class Name:
         else:
             genders = ["F", "M"]
         return genders
+
+    def add_nickname(self, nick):
+        if nick.name in self.nicknames: return 0
+        if nick.name is self.name: return 0
+        #print "Found nickname", nick.name, "for", self.name, "from", nick.meaning
+        self.nicknames[nick.name] = nick
+        return 1 + nick.add_full_name(self)
+
+    def add_full_name(self, full):
+        if full.name in self.full_names: return 0
+        if full.name is self.name: return 0
+        self.full_names[full.name] = full
+        return 1 + full.add_nickname(self)

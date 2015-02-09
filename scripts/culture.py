@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from __future__ import division, with_statement
+import re
 
 def chineseness(name):
     """
@@ -12,7 +13,29 @@ def chineseness(name):
     based on the English name that will work instead?
     """
     score = 1
-
+    test = False
+    sound_groups = {
+        "impossible": {
+            "penalty": 0.75,
+            "sounds": ['l$', 'le$', 'er', 'st', 'ts', 'ld', 'lt', 'rl', 'x']
+        },
+        "tough": {
+            "penalty": 0.3,
+            "sounds": ['th', 'r', 'mb', 'rl', 'oo', 'v']
+        },
+        "okay": {
+            "penalty": 0.15,
+            "sounds": ['b$', 'c$', 'd$', 'de$', 'f$', 'g$', 'j$', 'k$', 'ke$',
+                       'm$', 'me$', 'n$', 'ne$', 'p$', 'pe$', 'q$',
+                       'r$', 're$', 's$', 'se$', 't$', 'te$']
+        }
+    }
+    for sound_group in sound_groups.values():
+        for sound in sound_group['sounds']:
+            score -= sound_group['penalty'] * len(re.findall(sound, name.name.lower()))
+    score = max(0, score)
+    if test:
+        print "%s got chineseness score %.3f"%(name, score)
     return score
 
 def genderedness(name):

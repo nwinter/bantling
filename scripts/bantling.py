@@ -36,6 +36,7 @@ def main(use_cache=True, test=False, test_name=None, exhaustive=False):
     if not exhaustive:
         all_names = [name for name in all_names
                      if name.get_popularity(normalized=True) > 0.01]
+                     #if random.random() < 0.01]
 	# Later we can lower the threshold or run the exhaustive version.
         print "Scoring only most popular %d names." % len(all_names)
 
@@ -71,6 +72,6 @@ if __name__ == "__main__":
     if len(sys.argv) >= 4:
         test_name = sys.argv[3]
     exhaustive = False
-    if len(sys.argv) >= 5:
+    if len(sys.argv) >= 5 and sys.argv[4] == 'true':
         exhaustive = sys.argv[4]
     main(use_cache, test, test_name, exhaustive)

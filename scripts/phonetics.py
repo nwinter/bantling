@@ -75,7 +75,7 @@ def spellability(name, test=False):
         for other in _metaphone_index[metaphone]:
             if other is name: continue
             pop_ratio = (other.get_popularity(emphasize_recent=True) /
-                         name.get_popularity(emphasize_recent=True))
+                         (name.get_popularity(emphasize_recent=True) or 0.000001))
             if pop_ratio < 0.01: continue  # levenshtein is expensive
             distance = levenshtein(other.name, name.name)
             penalty = math.log(1 + pop_ratio) / (distance ** 2)
@@ -93,16 +93,13 @@ def pronounceability(name):
 
     We assign a slight penalty to anything with two Metaphone keys.
 
-    If we could find a dictionary site with an API to give us pronunciations,
-    then we could try to programmatically pull that in.
+    We also penalize things with R's, since Chloe can't say R's very well.
 
-    Other than that, though, I guess we just have to rank things manually.
+    Other than that, we got nothing, so this ranker isn't very strong.
     """
-    score = 1 if len(name.metaphones) == 1 else 0
-
-    # TODO: more stuff
-    
-    return score
+    score = 1 if len(name.metaphones) == 1 else 0.5
+    score -= 0.5 * name.name.lower().count('r')
+    return max(0, score)
 
 def similar_names(name, all_names, limit=90019001):
     """

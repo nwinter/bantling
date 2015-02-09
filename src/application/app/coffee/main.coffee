@@ -43,13 +43,13 @@ module.exports.listenToSliders = listenToSliders = ->
 renderNames = ->
   table = $('#name-list-table')
   tbody = table.find('tbody').empty()
-  for name in allNames
+  for name, rank in allNames
+    #console.log 'making score', judge(defaultScorers, name), 'for', name if i is 0
     name.score = judge defaultScorers, name
   allNames = _.sortBy(allNames, 'score').reverse()
   genders = []
   genders.push "F" if $('#gender-female').is ':checked'
   genders.push "M" if $('#gender-male').is ':checked'
-  console.log 'genders', genders
   allGenderMatchNames = _.filter allNames, (name) -> _.intersection(name.genders, genders).length
   for name, rank in allGenderMatchNames
     break if rank > 100
@@ -60,6 +60,7 @@ renderNames = ->
     row.append $("<td>#{genders}</td>")
     row.append $("<td><a href='' class='btn'>Like</a></td>")
     row.append $("<td><a href='' class='btn'>Hate</a></td>")
+    row.append $("<td>#{name.meaning or ''}</td>")
     tbody.append(row)
 
 module.exports.judge = judge = (scorers, name) ->
@@ -76,16 +77,16 @@ defaultScorers = [
   {scoreID: "phonetics-pronounceability", weight: 10}
   {scoreID: "history-timelessness", weight: 20}
   {scoreID: "history-relevancy", weight: 30}
-  {scoreID: "history-rarity", weight: 30}
+  {scoreID: "history-rarity", weight: 10}
   {scoreID: "internet-googlability", weight: 8}
   {scoreID: "internet-availability", weight: 4}
   {scoreID: "meaning-secularity", weight: 30}
-  {scoreID: "meaning-seriousness", weight: 3}
-  {scoreID: "beauty-palindromicity", weight: 5}
-  {scoreID: "beauty-initialization", weight: 10}
+  {scoreID: "beauty-palindromicity", weight: 20}
+  {scoreID: "beauty-initialization", weight: 1}
   {scoreID: "speed-shortness", weight: 20}
   {scoreID: "speed-recitability", weight: 4}
   {scoreID: "speed-nicklessness", weight: 15}
+  {scoreID: "speed-nickedness", weight: 10}
   {scoreID: "culture-chineseness", weight: 4}
   {scoreID: "culture-genderedness", weight: 20}
 ]

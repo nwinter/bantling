@@ -18,9 +18,25 @@ def look_up(names, use_cache=True):
         with open(_all_names_whois_cache_filename, 'rb') as f:
             _all_names_whois = pickle.load(f)
     else:
+        print
         for i, name in enumerate(names):
-            result = whois.query(name.name.lower() + 'winter.com')
+            if name.get_popularity(normalized=True) < 0.0001:
+                continue
+            print "\r%05d / %05d - testing whois for %20swinter.com"%(
+                i, len(names), name.name.lower()),
+            try:
+                result = whois.query(name.name.lower() + 'winter.com')
+            except (KeyboardInterrupt, SystemExit), e:
+                print "\nStopping whois lookups due to KeyboardInterrupt."
+                break
+            except Exception, e:
+                print "\nCouldn't fetch %s: %s"%(name.name.lower() + 'winter.com', e)
+                _all_names_whois[name.name] = False
+                continue
             _all_names_whois[name.name] = bool(result)
+            print bool(result),
+            if result:
+                print
         with open(_all_names_whois_cache_filename, 'wb') as f:
             pickle.dump(_all_names_whois, f, pickle.HIGHEST_PROTOCOL)
     for name in names:
@@ -33,6 +49,7 @@ def googlability(name):
     We penalize more depending on how many results for "<Name> Winter".
     """
     score = 1
+    #print "Googlability for", name, getattr(name, 'whois', '<no whois>')
 
     return score
 

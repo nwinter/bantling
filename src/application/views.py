@@ -11,19 +11,28 @@ For example the *say_hello* handler, handling the URL route '/hello/<username>',
 from google.appengine.api import users
 from google.appengine.runtime.apiproxy_errors import CapabilityDisabledError
 
-from flask import request, render_template, flash, url_for, redirect
-
+from flask import request, render_template, flash, url_for, redirect, jsonify
+from flask.views import View, MethodView
 from flask_cache import Cache
 
 from application import app
 from decorators import login_required, admin_required
 from forms import ExampleForm
-from models import ExampleModel
+from models import ExampleModel, SavedNames
 
 
 # Flask-Cache (configured to use App Engine Memcache API)
 cache = Cache(app)
 
+@app.context_processor
+def context_processor():
+    d = {'user': users.get_current_user()}
+    if not d['user']:
+        d['login_url'] = users.create_login_url("/")
+    else:
+        d['logout_url'] = users.create_logout_url("/")
+        d['admin'] = users.is_current_user_admin()
+    return d
 
 def home():
     controls = [
@@ -45,6 +54,28 @@ def home():
         {"id": "culture-genderedness", "name": "Genderedness", "weight": 20},
     ]
     return render_template('home.html', **locals())
+
+class SavedNamesView(MethodView):
+    @login_required
+    def get(self):
+        user = users.get_current_user()
+        key = user.user_id()
+        saved_names = SavedNames.get_or_insert(key, user=key)
+        return jsonify(saved_names.to_dict())
+
+    @login_required
+    def post(self):
+        liked = request.form.getlist('liked[]')
+        hated = request.form.getlist('hated[]')
+        user = users.get_current_user()
+        key = user.user_id()
+        saved_names = SavedNames.get_or_insert(key, user=key)
+        saved_names.liked = liked
+        saved_names.hated = hated
+        saved_names.put()
+        return jsonify(saved_names.to_dict())
+
+app.add_url_rule('/saved_names/', view_func=SavedNamesView.as_view('saved_names'))
 
 
 def say_hello(username):

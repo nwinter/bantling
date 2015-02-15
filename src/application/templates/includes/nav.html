@@ -43,6 +43,12 @@
           <li><a href="#">Separated link</a></li>
         </ul>
       </li>
+      {% if login_url %}
+      <li><a href="{{login_url}}">Log In</a></li>
+      {% else %}
+      <li><a href="{{logout_url}}">Log Out</a></li>
+      {% endif %}
+      {% if admin %}{% endif %}
     </ul>
   </div><!-- /.navbar-collapse -->
 </nav>

@@ -30,7 +30,40 @@ module.exports.loadNames = loadNames = ->
     url: "/static/js/names.json"
     success: onSuccess
     error: onError
-  return
+
+allSavedNames = {}
+module.exports.loadSavedNames = loadSavedNames = ->
+  onSuccess = (savedNames, textStatus, jqXHR) ->
+    console.log "Loaded", savedNames.liked.length, "liked names and", savedNames.hated.length, "hated names."
+    allSavedNames = savedNames
+    renderSavedNames()
+    loadNames()
+
+  onError = (jqXHR, textStatus, errorThrown) ->
+    console.log "Couldn't load savedNames; are you logged in?\n", jqXHR, textStatus, errorThrown
+
+  console.log "Loading savedNames..."
+  $.ajax
+    dataType: "json"
+    url: "/saved_names/"
+    success: onSuccess
+    error: onError
+
+module.exports.saveNames = saveNames = ->
+  onSuccess = (savedNames, textStatus, jqXHR) ->
+    #console.log "Saved", savedNames.liked.length, "liked names and", savedNames.hated.length, "hated names."
+
+  onError = (jqXHR, textStatus, errorThrown) ->
+    console.log "Couldn't save names; are you logged in?\n", jqXHR, textStatus, errorThrown
+
+  #console.log "Saving names...", allSavedNames
+  $.ajax
+    dataType: "json"
+    url: "/saved_names/"
+    success: onSuccess
+    error: onError
+    method: 'POST'
+    data: allSavedNames
 
 module.exports.listenToSliders = listenToSliders = ->
   $('.slider-control').on 'change', ->
@@ -40,13 +73,32 @@ module.exports.listenToSliders = listenToSliders = ->
   $('.btn-row input').on 'change', ->
     renderNames()
 
+module.exports.listenToButtons = listenToButtons = ->
+  $('.save-button').off('click').on 'click', (e) ->
+    button = $(e.target).closest 'button'
+    row = button.closest('tr')
+    name = row.find('td:first-child').text()
+    like = button.hasClass 'like-button'
+    hate = button.hasClass 'hate-button'
+    allSavedNames.liked = _.without allSavedNames.liked, name
+    allSavedNames.hated = _.without allSavedNames.hated, name
+    allSavedNames.liked.push name if like
+    allSavedNames.hated.push name if hate
+    row.remove()
+    saveNames()
+    renderSavedNames()
+    if hate
+      $('#saved-hated-panel:not(.in)').collapse('toggle')
+
 renderNames = ->
   table = $('#name-list-table')
+  table.find('button').off 'click'
   tbody = table.find('tbody').empty()
   for name, rank in allNames
     #console.log 'making score', judge(defaultScorers, name), 'for', name if i is 0
     name.score = judge defaultScorers, name
   allNames = _.sortBy(allNames, 'score').reverse()
+  allNames = _.reject allNames, (name) -> (name.name in allSavedNames.liked) or (name.name in allSavedNames.hated)
   genders = []
   genders.push "F" if $('#gender-female').is ':checked'
   genders.push "M" if $('#gender-male').is ':checked'
@@ -58,10 +110,23 @@ renderNames = ->
     row.append $("<td>#{name.name}</td>")
     row.append $("<td>#{Math.round(name.score)}</td>")
     row.append $("<td>#{genders}</td>")
-    row.append $("<td><a href='' class='btn'>Like</a></td>")
-    row.append $("<td><a href='' class='btn'>Hate</a></td>")
+    row.append $("<td><button class='btn btn-primary btn-xs like-button save-button'>Like</button></td>")
+    row.append $("<td><button class='btn btn-warning btn-xs hate-button save-button'>Hate</button></td>")
     row.append $("<td>#{name.meaning or ''}</td>")
     tbody.append(row)
+  listenToButtons()
+
+renderSavedNames = ->
+  for type in ['liked', 'hated']
+    names = allSavedNames[type]
+    list = $("#saved-#{type}-list").empty()
+    for name in names
+      li = $("<li class='list-group-item'>#{name}</li>")
+      list.append li
+    unless names.length
+      li = $("<li class='list-group-item'>No #{type} names yet.</li>")
+      list.append li
+    $("#saved-#{type} .panel-title .badge").text names.length
 
 module.exports.judge = judge = (scorers, name) ->
   scorers ?= defaultScorers

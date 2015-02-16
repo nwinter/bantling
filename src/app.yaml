@@ -41,3 +41,24 @@ handlers:
 
 - url: .*
   script: run.application.app
+
+skip_files: |
+ ^(.*/)?(
+ (app\.yaml)|
+ (index\.yaml)|
+ (#.*#)|
+ (.*~)|
+ (.*\.py[co])|
+ (\..*)|
+ ^(go\.)|
+ (Thumbs.db)|
+ (\.bat)|
+ (\.sh)|
+ (\.pkl)|
+ (\.datastore)|
+ (remote_console.py)|
+ (\.workflow)|
+ (application/node_modules)|
+ (application/bower_components)|
+ (application/app)|
+ )$

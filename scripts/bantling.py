@@ -39,6 +39,10 @@ def main(use_cache=True, test=False, test_name=None, exhaustive=False):
                      #if random.random() < 0.01]
 	# Later we can lower the threshold or run the exhaustive version.
         print "Scoring only most popular %d names." % len(all_names)
+    else:
+        all_names = [name for name in all_names
+                     if name.get_popularity(normalized=True) > 0.00001]
+        print "Can only fit up to %d names." % len(all_names)
 
     # Rank all the names!
     for i, name in enumerate(all_names):

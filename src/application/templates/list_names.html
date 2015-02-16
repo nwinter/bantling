@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block style_block %}
+{% endblock %}
+
+{% block content %}
+
+{% for saved_names in all_saved_names %}
+  <h3>Names Saved By: {{ saved_names.user }}</h3>
+  <div class="panel-group saved-name-group" role="tablist">
+    <div id="saved-liked" class="panel">
+      <div class="panel-heading" role="tab">
+        <h4 class="panel-title">
+          <a class="collapsed" data-toggle="collapse" href="#saved-liked-panel">
+    	  Liked
+            <span class="badge">{{ saved_names.liked|length }}</span>
+    	</a>
+        </h4>
+      </div>
+      <div id="saved-liked-panel" class="panel-collapse in" role="tabpanel">
+        <ul id="saved-liked-list" class="list-group">
+          {% for name in saved_names.liked %}
+            <li class="list-group-item">{{ name }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+
+{% endblock content %}
+
+{% block footer %}
+{% endblock footer %}
+
+{% block tail_script %}
+{% endblock tail_script %}

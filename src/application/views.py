@@ -77,11 +77,15 @@ class SavedNamesView(MethodView):
 
 app.add_url_rule('/saved_names/', view_func=SavedNamesView.as_view('saved_names'))
 
+def list_names():
+    """List all liked names for all users."""
+    all_saved_names = SavedNames.query().fetch(100)
+    return render_template('list_names.html', all_saved_names=all_saved_names, len=len)
+
 
 def say_hello(username):
     """Contrived example to demonstrate Flask's url routing capabilities"""
     return 'Hello %s' % username
-
 
 @login_required
 def list_examples():

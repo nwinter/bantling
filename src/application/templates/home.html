@@ -5,88 +5,88 @@
 
 {% block content %}
 
-    <h1 id="home-h1">Name Your Bantling</h1>
-    <div class="row">
+<h1 id="home-h1">Name Your Bantling</h1>
+<div class="row">
 
-      <div class="col-xs-4">
-        <h3>Preferences</h3>
-        <form class="form-horizontal">
+  <div class="col-xs-4">
+    <h3>Preferences</h3>
+    <form class="form-horizontal">
 
-          <div class="btn-group btn-row" data-toggle="buttons">
-            <label class="btn btn-primary active">
-              <input id="gender-female" type="checkbox" autocomplete="off" checked> Female Names
-            </label>
-            <label class="btn btn-primary active">
-              <input id="gender-male" type="checkbox" autocomplete="off" checked> Male Names
-            </label>
-          </div>
-
-          {% for control in controls %}
-          <div class="form-group">
-            <label for="{{ control.id }}" class="control-label col-xs-4">{{ control.name }}</label>
-            <div class="col-xs-8">
-              <input type="range" class="slider-control" id="{{ control.id }}" min="0" max="100" step="1" value="{{ control.weight }}">
-            </div>
-          </div>
-          {% endfor %}
-        </form>
+      <div class="btn-group btn-row" data-toggle="buttons">
+        <label class="btn btn-primary active">
+          <input id="gender-female" type="checkbox" autocomplete="off" checked> Female Names
+        </label>
+        <label class="btn btn-primary active">
+          <input id="gender-male" type="checkbox" autocomplete="off" checked> Male Names
+        </label>
       </div>
 
-      <div class="col-xs-5">
-        <h3>Names</h3>
-        <table id="name-list-table" class="table table-striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Score</th>
-              <th>Gender</th>
-              <th>Like</th>
-              <th>Hate</th>
-              <th>Meaning</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for example in examples or [] %}
-            <tr>
-              <td>{{ example.name }}</td>
-              <td>{{ example.score }}</td>
-              <td>{{ example.genders }}</td>
-              <td>
-                <button class="btn btn-primary btn-xs like-button save-button">Like</button>
-              </td>
-              <td>
-                <button class="btn btn-warning btn-xs like-button save-button">Hate</button>
-              </td>
-              <td>{{ example.meaning }}</td>
-            </tr>
-            {% else %}
-            <tr><td colspan="5">No names yet</td></tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-
-      <div class="col-xs-3">
-        <h3>Saved Names</h3>
-        <div class="panel-group saved-name-group" role="tablist">
-	{% for (type, in) in [("liked", True), ("hated", False)] %}
-          <div id="saved-{{type}}" class="panel">
-            <div class="panel-heading" role="tab">
-              <h4 class="panel-title">
-                <a class="collapsed" data-toggle="collapse" href="#saved-{{type}}-panel">
-		  {{type.capitalize()}}
-		  <span class="badge"></span>
-		</a>
-              </h4>
-            </div>
-            <div id="saved-{{type}}-panel" class="panel-collapse collapse {{'in' if in else ''}}" role="tabpanel">
-              <ul id="saved-{{type}}-list" class="list-group"></ul>
-            </div>
-        {% endfor %}
+      {% for control in controls %}
+      <div class="form-group">
+        <label for="{{ control.id }}" class="control-label col-xs-4">{{ control.name }}</label>
+        <div class="col-xs-8">
+          <input type="range" class="slider-control" id="{{ control.id }}" min="0" max="100" step="1" value="{{ control.weight }}">
         </div>
       </div>
+      {% endfor %}
+    </form>
+  </div>
 
+  <div class="col-xs-5">
+    <h3>Names</h3>
+    <table id="name-list-table" class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Score</th>
+          <th>Gender</th>
+          <th>Like</th>
+          <th>Hate</th>
+          <th>Meaning</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for example in examples or [] %}
+        <tr>
+          <td>{{ example.name }}</td>
+          <td>{{ example.score }}</td>
+          <td>{{ example.genders }}</td>
+          <td>
+            <button class="btn btn-primary btn-xs like-button save-button">Like</button>
+          </td>
+          <td>
+            <button class="btn btn-warning btn-xs like-button save-button">Hate</button>
+          </td>
+          <td>{{ example.meaning }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5">No names yet</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col-xs-3">
+    <h3>Saved Names</h3>
+    <div class="panel-group saved-name-group" role="tablist">
+      {% for (type, in) in [("liked", True), ("hated", False)] %}
+      <div id="saved-{{type}}" class="panel">
+        <div class="panel-heading" role="tab">
+          <h4 class="panel-title">
+            <a class="collapsed" data-toggle="collapse" href="#saved-{{type}}-panel">
+              {{type.capitalize()}}
+              <span class="badge"></span>
+            </a>
+          </h4>
+        </div>
+        <div id="saved-{{type}}-panel" class="panel-collapse collapse {{'in' if in else ''}}" role="tabpanel">
+          <ul id="saved-{{type}}-list" class="list-group"></ul>
+        </div>
+      </div>
+      {% endfor %}
     </div>
+  </div>
+</div>
 
 {% endblock content %}
 

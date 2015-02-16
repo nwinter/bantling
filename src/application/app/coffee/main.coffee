@@ -31,7 +31,7 @@ module.exports.loadNames = loadNames = ->
     success: onSuccess
     error: onError
 
-allSavedNames = {}
+allSavedNames = {liked: [], hated: []}
 module.exports.loadSavedNames = loadSavedNames = ->
   onSuccess = (savedNames, textStatus, jqXHR) ->
     console.log "Loaded", savedNames.liked.length, "liked names and", savedNames.hated.length, "hated names."

@@ -20,6 +20,9 @@ from decorators import login_required, admin_required
 from forms import ExampleForm
 from models import ExampleModel, SavedNames
 
+from collections import defaultdict, Counter
+import logging
+
 
 # Flask-Cache (configured to use App Engine Memcache API)
 cache = Cache(app)
@@ -80,7 +83,19 @@ app.add_url_rule('/saved_names/', view_func=SavedNamesView.as_view('saved_names'
 def list_names():
     """List all liked names for all users."""
     all_saved_names = SavedNames.query().fetch(100)
-    return render_template('list_names.html', all_saved_names=all_saved_names, len=len)
+    me = users.get_current_user().user_id()
+    my_saved_names = filter(lambda x: x.user == me, all_saved_names)
+    if len(my_saved_names):
+        my_saved_names = my_saved_names[0]
+    else:
+        my_saved_names = {"liked": [], "hated": []}
+    counter = Counter()
+    for saved_names in all_saved_names:
+        for name in saved_names.liked:
+            counter[name] += 1
+    top_names = counter.most_common(100)
+    return render_template('list_names.html', all_saved_names=all_saved_names,
+                           top_names=top_names, my_saved_names=my_saved_names)
 
 
 def say_hello(username):

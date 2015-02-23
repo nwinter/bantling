@@ -5,22 +5,52 @@
 
 {% block content %}
 
+<h3>Top {{ top_names|length }} Names Across {{ all_saved_names|length }} Users</h3>
+<div class="panel-group saved-name-group" role="tablist">
+  <div id="top-names" class="panel">
+    <div class="panel-heading" role="tab">
+      <h4 class="panel-title">
+        <a class="collapsed" data-toggle="collapse" href="#top-names-list">
+          Top Names
+          <span class="badge">{{ top_names|length }}</span>
+        </a>
+      </h4>
+    </div>
+    <div id="top-names-panel" class="panel-collapse in" role="tabpanel">
+      <ul id="top-names-list" class="list-group">
+        {% for name in top_names %}
+          <li class="list-group-item top-names-list-item" data-name={{ name.0 }}>
+            <span>{{ name.0 }}</span>
+            <span class="badge">{{ name.1 }}</span>
+            <button class="btn btn-primary btn-xs like-button save-button">Like</button>
+            <button class="btn btn-warning btn-xs hate-button save-button">Hate</button>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+
 {% for saved_names in all_saved_names %}
   <h3>Names Saved By: {{ saved_names.user }}</h3>
   <div class="panel-group saved-name-group" role="tablist">
-    <div id="saved-liked" class="panel">
+    <div class="panel">
       <div class="panel-heading" role="tab">
         <h4 class="panel-title">
-          <a class="collapsed" data-toggle="collapse" href="#saved-liked-panel">
-    	  Liked
+          <a class="collapsed" data-toggle="collapse" href="#saved-liked-panel-{{ saved_names.user }}">
+            Liked
             <span class="badge">{{ saved_names.liked|length }}</span>
     	</a>
         </h4>
       </div>
-      <div id="saved-liked-panel" class="panel-collapse in" role="tabpanel">
-        <ul id="saved-liked-list" class="list-group">
+      <div id="saved-liked-panel-{{ saved_names.user }}" class="panel-collapse in" role="tabpanel">
+        <ul id="saved-liked-list-{{ saved_names.user }}" class="list-group">
           {% for name in saved_names.liked %}
-            <li class="list-group-item">{{ name }}</li>
+            <li class="list-group-item top-names-list-item" data-name={{ name }}>
+              <span>{{ name }}</span>
+              <button class="btn btn-primary btn-xs like-button save-button">Like</button>
+              <button class="btn btn-warning btn-xs hate-button save-button">Hate</button>
+            </li>
           {% endfor %}
         </ul>
       </div>
@@ -34,4 +64,14 @@
 {% endblock footer %}
 
 {% block tail_script %}
+<script>
+  $(document).ready(function() {
+    var main = require('coffee/main');
+    main.loadSavedNames();
+    var liked = [{% for name in my_saved_names.liked %}"{{ name }}", {% endfor %}];
+    var hated = [{% for name in my_saved_names.hated %}"{{ name }}", {% endfor %}];
+    main.highlightNameOpinions(liked, hated);
+    main.listenToTopNameButtons()
+  });
+</script>
 {% endblock tail_script %}

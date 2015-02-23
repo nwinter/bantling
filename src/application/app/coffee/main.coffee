@@ -49,9 +49,10 @@ module.exports.loadSavedNames = loadSavedNames = ->
     success: onSuccess
     error: onError
 
-module.exports.saveNames = saveNames = ->
+module.exports.saveNames = saveNames = (callback) ->
   onSuccess = (savedNames, textStatus, jqXHR) ->
     #console.log "Saved", savedNames.liked.length, "liked names and", savedNames.hated.length, "hated names."
+    callback?()
 
   onError = (jqXHR, textStatus, errorThrown) ->
     console.log "Couldn't save names; are you logged in?\n", jqXHR, textStatus, errorThrown
@@ -74,7 +75,7 @@ module.exports.listenToSliders = listenToSliders = ->
     renderNames()
 
 module.exports.listenToButtons = listenToButtons = ->
-  $('.save-button').off('click').on 'click', (e) ->
+  $('tr .save-button').off('click').on 'click', (e) ->
     button = $(e.target).closest 'button'
     row = button.closest('tr')
     name = row.find('td:first-child').text()
@@ -155,3 +156,26 @@ defaultScorers = [
   {scoreID: "culture-chineseness", weight: 4}
   {scoreID: "culture-genderedness", weight: 20}
 ]
+
+# top names list page
+module.exports.highlightNameOpinions = highlightNameOpinions = (liked, hated) ->
+  $('.top-names-list-item').each ->
+    name = $(@).data 'name'
+    $(@).addClass 'liked' if name in liked
+    $(@).addClass 'hated' if name in hated
+    $(@).find('.btn-warning').prop('disabled', true) if name in hated
+    $(@).find('.btn-primary').prop('disabled', true) if name in liked
+
+module.exports.listenToTopNameButtons = listenToTopNameButtons = ->
+  $('.top-names-list-item .save-button').off('click').on 'click', (e) ->
+    button = $(e.target).closest 'button'
+    li = button.closest('li')
+    name = li.data('name')
+    like = button.hasClass 'like-button'
+    hate = button.hasClass 'hate-button'
+    allSavedNames.liked = _.without allSavedNames.liked, name
+    allSavedNames.hated = _.without allSavedNames.hated, name
+    allSavedNames.liked.push name if like
+    allSavedNames.hated.push name if hate
+    highlightNameOpinions allSavedNames.liked, allSavedNames.hated
+    saveNames()

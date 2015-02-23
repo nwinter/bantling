@@ -24,7 +24,7 @@ from ._3_adjust import Domain
 
 
 CACHE_FILE = 'names/cached_whois_lookups.json'
-SLOW_DOWN = 10
+SLOW_DOWN = 2
 
 
 def query(domain, force=0, cache_file=None, slow_down=0, ignore_returncode=0):

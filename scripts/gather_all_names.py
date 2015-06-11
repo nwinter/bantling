@@ -45,7 +45,7 @@ def gather(yob_years, use_cache=True, test=False):
             yearly_totals.append(total_popularity)
         for name in _all_names.values():
             name.normalize_popularities(yearly_totals)
-        internet.look_up(_all_names.values(), use_cache)
+        #internet.look_up(_all_names.values(), use_cache)
         meaning.imbue(_all_names)
         phonetics.phoneticize(_all_names.values(), 'java', use_cache, test)
         with open(_all_names_cache_filename, 'wb') as f:

@@ -73,6 +73,7 @@ module.exports.listenToSliders = listenToSliders = ->
     renderNames()
   $('.btn-row input').on 'change', ->
     renderNames()
+  $('.needs-tooltip').tooltip placement: 'bottom'
 
 module.exports.listenToButtons = listenToButtons = ->
   $('tr .save-button').off('click').on 'click', (e) ->
@@ -144,11 +145,11 @@ defaultScorers = [
   {scoreID: "history-timelessness", weight: 20}
   {scoreID: "history-relevancy", weight: 30}
   {scoreID: "history-rarity", weight: 10}
-  {scoreID: "internet-googlability", weight: 8}
-  {scoreID: "internet-availability", weight: 4}
+  #{scoreID: "internet-googlability", weight: 8}
+  #{scoreID: "internet-availability", weight: 4}
   {scoreID: "meaning-secularity", weight: 30}
-  {scoreID: "beauty-palindromicity", weight: 20}
-  {scoreID: "beauty-initialization", weight: 1}
+  #{scoreID: "beauty-palindromicity", weight: 20}
+  #{scoreID: "beauty-initialization", weight: 1}
   {scoreID: "speed-shortness", weight: 20}
   {scoreID: "speed-recitability", weight: 4}
   {scoreID: "speed-nicklessness", weight: 15}

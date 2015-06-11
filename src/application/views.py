@@ -39,22 +39,22 @@ def context_processor():
 
 def home():
     controls = [
-        {"id": "phonetics-spellability", "name": "Spellability", "weight": 40},
-        {"id": "phonetics-pronounceability", "name": "Pronounceability", "weight": 10},
-        {"id": "history-timelessness", "name": "Timelessness", "weight": 20},
-        {"id": "history-relevancy", "name": "Relevancy", "weight": 30},
-        {"id": "history-rarity", "name": "Rarity", "weight": 10},
-        {"id": "internet-googlability", "name": "Googlability", "weight": 8},
-        {"id": "internet-availability", "name": "Availability", "weight": 4},
-        {"id": "meaning-secularity", "name": "Secularity", "weight": 30},
-        {"id": "beauty-palindromicity", "name": "Palindromicity", "weight": 20},
-        {"id": "beauty-initialization", "name": "Initialization", "weight": 1},
-        {"id": "speed-shortness", "name": "Shortness", "weight": 20},
-        {"id": "speed-recitability", "name": "Recitability", "weight": 4},
-        {"id": "speed-nicklessness", "name": "Nicklessness", "weight": 15},
-        {"id": "speed-nickedness", "name": "Nickedness", "weight": 10},
-        {"id": "culture-chineseness", "name": "Chineseness", "weight": 4},
-        {"id": "culture-genderedness", "name": "Genderedness", "weight": 20},
+        {"id": "phonetics-spellability", "name": "Spellability", "weight": 40, "explanation": "Spellability: penalizes names which sound similar to other common names, since people will not know how to spell them."},
+        {"id": "phonetics-pronounceability", "name": "Pronounceability", "weight": 10, "explanation": "Pronounceability: penalizes names which we think could be pronounced two different ways, or which have Rs in them. (This is not a well-implemented metric.)"},
+        {"id": "history-timelessness", "name": "Timelessness", "weight": 20, "explanation": "Timelessness: penalizes anything that's extra old-fashioned, is extra trendy now, or was a fad name in the past."},
+        {"id": "history-relevancy", "name": "Relevancy", "weight": 30, "explanation": "Relevancy: penalizes very rare names (which often look like crazy typo gibberish)."},
+        {"id": "history-rarity", "name": "Rarity", "weight": 10, "explanation": "Rarity: penalizes names that are very common."},
+        #{"id": "internet-googlability", "name": "Googlability", "weight": 8},
+        #{"id": "internet-availability", "name": "Availability", "weight": 4},
+        {"id": "meaning-secularity", "name": "Secularity", "weight": 30, "explanation": "Secularity: penalizes names which are clearly Biblical. (Should also include other religions, but doesn't yet.)"},
+        #{"id": "beauty-palindromicity", "name": "Palindromicity", "weight": 20},
+        #{"id": "beauty-initialization", "name": "Initialization", "weight": 1},
+        {"id": "speed-shortness", "name": "Shortness", "weight": 20, "explanation": "Shortness: penalizes names with many letters or many syllables."},
+        {"id": "speed-recitability", "name": "Recitability", "weight": 4, "explanation": "Recitability: penalizes names that aren't easy to spell aloud (due to having W's or slightly unclearly pronounced letters)."},
+        {"id": "speed-nicklessness", "name": "Nicklessness", "weight": 15, "explanation": "Nicklessness: penalizes names that have shorter nickname versions (like 'Nicholas')."},
+        {"id": "speed-nickedness", "name": "Nickedness", "weight": 10, "explanation": "Nickedness: penalizes names that are nicknames of longer names (like 'Nick')."},
+        {"id": "culture-chineseness", "name": "Chineseness", "weight": 4, "explanation": "Chineseness: penalizes names that would be hard to pronounce for native Chinese speakers due to unfamiliar consonant clusters and other sound patterns."},
+        {"id": "culture-genderedness", "name": "Genderedness", "weight": 20, "explanation": "Genderedness: penalizes names that are ambiguously gendered."},
     ]
     return render_template('home.html', **locals())
 
@@ -83,8 +83,12 @@ app.add_url_rule('/saved_names/', view_func=SavedNamesView.as_view('saved_names'
 def list_names():
     """List all liked names for all users."""
     all_saved_names = SavedNames.query().fetch(100)
-    me = users.get_current_user().user_id()
-    my_saved_names = filter(lambda x: x.user == me, all_saved_names)
+    me = users.get_current_user()
+    if me:
+        me = me.user_id()
+        my_saved_names = filter(lambda x: x.user == me, all_saved_names)
+    else:
+        my_saved_names = []
     if len(my_saved_names):
         my_saved_names = my_saved_names[0]
     else:

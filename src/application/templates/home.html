@@ -5,10 +5,10 @@
 
 {% block content %}
 
-<h1 id="home-h1">Name Your Bantling</h1>
+<h1 id="home-h1">Name Your Bantling<em>brought to you by <a href="http://www.nickwinter.net">Nick Winter</a></em></h1>
 <div class="row">
 
-  <div class="col-xs-4">
+  <div class="col-xs-3">
     <h3>Preferences</h3>
     <form class="form-horizontal">
 
@@ -22,9 +22,9 @@
       </div>
 
       {% for control in controls %}
-      <div class="form-group">
-        <label for="{{ control.id }}" class="control-label col-xs-4">{{ control.name }}</label>
-        <div class="col-xs-8">
+      <div class="form-group needs-tooltip" title="{{ control.explanation }}">
+        <label for="{{ control.id }}" class="control-label col-xs-5">{{ control.name }}</label>
+        <div class="col-xs-7">
           <input type="range" class="slider-control" id="{{ control.id }}" min="0" max="100" step="1" value="{{ control.weight }}">
         </div>
       </div>
@@ -32,7 +32,7 @@
     </form>
   </div>
 
-  <div class="col-xs-5">
+  <div class="col-xs-7">
     <h3>Names</h3>
     <table id="name-list-table" class="table table-striped">
       <thead>
@@ -66,7 +66,7 @@
     </table>
   </div>
 
-  <div class="col-xs-3">
+  <div class="col-xs-2">
     <h3>Saved Names</h3>
     <div class="panel-group saved-name-group" role="tablist">
       {% for (type, in) in [("liked", True), ("hated", False)] %}

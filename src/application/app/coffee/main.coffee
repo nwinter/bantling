@@ -100,7 +100,10 @@ renderNames = ->
     #console.log 'making score', judge(defaultScorers, name), 'for', name if i is 0
     name.score = judge defaultScorers, name
   allNames = _.sortBy(allNames, 'score').reverse()
-  allNames = _.reject allNames, (name) -> (name.name in allSavedNames.liked) or (name.name in allSavedNames.hated)
+  namesToSkip = {}
+  for name in allSavedNames.liked.concat allSavedNames.hated
+    namesToSkip[name] = true
+  allNames = _.reject allNames, (name) -> namesToSkip[name.name]
   genders = []
   genders.push "F" if $('#gender-female').is ':checked'
   genders.push "M" if $('#gender-male').is ':checked'
@@ -122,7 +125,8 @@ renderSavedNames = ->
   for type in ['liked', 'hated']
     names = allSavedNames[type]
     list = $("#saved-#{type}-list").empty()
-    for name in names
+    limit = if name is 'liked' then 100 else 25
+    for name in _.last(names, limit)
       li = $("<li class='list-group-item'>#{name}</li>")
       list.append li
     unless names.length

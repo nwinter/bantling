@@ -32,3 +32,6 @@ exports.config =
       pattern: /^app\/.*\.coffee$/
       options:
         max_line_length: {level: 'ignore'}
+    sass:
+      mode: 'native'
+      allowCache: true

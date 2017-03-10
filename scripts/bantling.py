@@ -14,7 +14,7 @@ import phonetics
 import judge
 import export_names
 
-yob_years = range(1880, 2014)
+yob_years = range(1880, 2016)
 
 def main(use_cache=True, test=False, test_name=None, exhaustive=False):
     print "Let's label this bantling!"
@@ -71,7 +71,7 @@ if __name__ == "__main__":
     test = False
     if len(sys.argv) >= 3 and sys.argv[2] == 'true':
         test = True
-        yob_years = range(2011, 2014)
+        yob_years = range(2013, 2016)
     test_name = None
     if len(sys.argv) >= 4:
         test_name = sys.argv[3]
